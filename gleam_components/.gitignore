@@ -1,0 +1,41 @@
+# Gleam build artifacts
+build/
+.gleam/
+
+# Dependencies (if using local deps)
+deps/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Lock files (if not using them)
+# manifest.toml

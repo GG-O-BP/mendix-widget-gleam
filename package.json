@@ -1,0 +1,46 @@
+{
+    "name": "mendixwidgetgleam",
+    "widgetName": "MendixWidgetGleam",
+    "version": "1.0.0",
+    "description": "My widget description",
+    "copyright": "sbtglobal",
+    "author": "Dohyeon Kim",
+    "engines": {
+        "node": ">=16"
+    },
+    "license": "sbtglobal",
+    "config": {
+        "projectPath": "./tests/testProject",
+        "mendixHost": "http://localhost:8080",
+        "developmentPort": 3000
+    },
+    "packagePath": "sbtglobal",
+    "scripts": {
+        "start": "pluggable-widgets-tools start:server",
+        "dev": "pluggable-widgets-tools start:web",
+        "build:gleam": "cd gleam_components && gleam build",
+        "copy:gleam": "powershell -c \"if (Test-Path 'src/gleam') { Remove-Item -Recurse -Force 'src/gleam' }; New-Item -ItemType Directory -Force -Path 'src/gleam'; Copy-Item 'gleam_components/build/dev/javascript/components/hello_world.mjs' 'src/gleam/hello_world.mjs'; Copy-Item 'gleam_components/build/dev/javascript/components/gleam.mjs' 'src/gleam/gleam.mjs'; Copy-Item 'gleam_components/build/dev/javascript/prelude.mjs' 'src/gleam/prelude.mjs'; Copy-Item 'gleam_components/js_ffi/react_helpers.js' 'src/gleam/react_helpers.js'; Copy-Item -Recurse 'gleam_components/build/dev/javascript/gleam_stdlib' 'src/gleam/gleam_stdlib'\"",
+        "fix:imports": "powershell -c \"(Get-Content 'src/gleam/hello_world.mjs') -replace '../gleam_stdlib/', './gleam_stdlib/' -replace '../js_ffi/', './' | Set-Content 'src/gleam/hello_world.mjs'; (Get-Content 'src/gleam/gleam.mjs') -replace '../prelude.mjs', './prelude.mjs' | Set-Content 'src/gleam/gleam.mjs'\"",
+        "build:widget": "pluggable-widgets-tools build:web",
+        "build": "npm run build:gleam && npm run copy:gleam && npm run fix:imports && npm run build:widget",
+        "lint": "pluggable-widgets-tools lint",
+        "lint:fix": "pluggable-widgets-tools lint:fix",
+        "prerelease": "npm run lint",
+        "release": "pluggable-widgets-tools release:web"
+    },
+    "devDependencies": {
+        "@mendix/pluggable-widgets-tools": "^10.15.0"
+    },
+    "dependencies": {
+        "classnames": "^2.2.6"
+    },
+    "resolutions": {
+        "react": "^18.2.0",
+        "react-native": "0.72.7"
+    },
+    "overrides": {
+        "react": "^18.2.0",
+        "react-native": "0.72.7"
+    },
+    "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+}
