@@ -1,5 +1,5 @@
-import gleam/dict
 import gleam/dynamic.{type Dynamic}
+import utils/react_helpers
 
 // Type definitions for editor config
 pub type PropertyType {
@@ -57,13 +57,9 @@ pub fn get_preview(
   _version: List(Int),
 ) -> Dynamic {
   // Return a simple preview structure for Studio Pro
-  create_preview_object()
+  react_helpers.create_preview_object()
 }
 
 pub fn get_custom_caption(_values: Dynamic, _platform: String) -> String {
   "{{WIDGET_NAME}}"
 }
-
-// FFI function to create preview object
-@external(javascript, "../js_ffi/react_helpers.js", "createPreviewObject")
-fn create_preview_object() -> Dynamic

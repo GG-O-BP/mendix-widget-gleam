@@ -23,7 +23,7 @@
     "lint:fix:widget": "pluggable-widgets-tools lint:fix",
     "prerelease:widget": "npm run lint",
     "release:widget": "pluggable-widgets-tools release:web",
-    "build:gleam": "node src-gleam/build_script.js",
+    "build:gleam": "node src-gleam/build.js",
     "start": "npm run build:gleam && npm run start:widget",
     "dev": "npm run build:gleam && npm run dev:widget",
     "build": "npm run build:gleam && npm run build:widget",

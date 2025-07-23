@@ -1,5 +1,5 @@
 import { createElement } from "react";
-import { editor_preview, get_preview_css } from "./gleam/widget.mjs";
+import { editor_preview } from "./gleam/mendix/widget.mjs";
 
 export function preview(props) {
     return editor_preview(props);

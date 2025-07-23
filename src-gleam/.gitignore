@@ -1,5 +1,5 @@
 # Gleam build artifacts
-build/
+/build/
 .gleam/
 
 # Dependencies (if using local deps)

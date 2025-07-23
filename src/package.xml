@@ -5,7 +5,7 @@
             <widgetFile path="MendixWidgetGleam.xml"/>
         </widgetFiles>
         <files>
-            <file path="sbtglobal/mendixwidgetgleam"/>
+            <file path="ggobp/mendixwidgetgleam"/>
         </files>
     </clientModule>
 </package>
