@@ -2,7 +2,7 @@
 Place your custom CSS here
 Generated from Gleam
 */
-.widget-mendixwidgetgleam {
+.widget-{{WIDGET_NAME_LOWER}} {
     /* Add your styles here */
 }
 
@@ -10,6 +10,6 @@ Generated from Gleam
     /* Gleam component specific styles */
 }
 
-.widget-mendixwidgetgleam .gleam-text {
+.widget-{{WIDGET_NAME_LOWER}} .gleam-text {
     /* Text styling from Gleam components */
 }

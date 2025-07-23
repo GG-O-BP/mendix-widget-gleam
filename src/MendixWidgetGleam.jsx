@@ -1,8 +1,7 @@
 import { createElement } from "react";
-
-import { hello_world } from "./gleam/hello_world.mjs";
+import { mendix_widget_gleam } from "./gleam/widget.mjs";
 import "./ui/MendixWidgetGleam.css";
 
-export function MendixWidgetGleam({ sampleText }) {
-    return hello_world(sampleText);
+export function MendixWidgetGleam(props) {
+    return mendix_widget_gleam(props);
 }

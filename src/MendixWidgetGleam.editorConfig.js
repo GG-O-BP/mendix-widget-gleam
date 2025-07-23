@@ -1,3 +1,10 @@
+import {
+    get_properties,
+    check,
+    get_preview,
+    get_custom_caption
+} from "./gleam/editor_config.mjs";
+
 /**
  * @typedef Property
  * @type {object}
@@ -7,26 +14,6 @@
  * @property {string[]} objectHeaders
  * @property {ObjectProperties[]} objects
  * @property {Properties[]} properties
- */
-
-/**
- * @typedef ObjectProperties
- * @type {object}
- * @property {PropertyGroup[]} properties
- * @property {string[]} captions
- */
-
-/**
- * @typedef PropertyGroup
- * @type {object}
- * @property {string} caption
- * @property {PropertyGroup[]} propertyGroups
- * @property {Property[]} properties
- */
-
-/**
- * @typedef Properties
- * @type {PropertyGroup}
  */
 
 /**
@@ -42,59 +29,29 @@
 
 /**
  * @param {object} values
- * @param {Properties} defaultProperties
+ * @param {object} defaultProperties
  * @param {("web"|"desktop")} target
- * @returns {Properties}
+ * @returns {object}
  */
 export function getProperties(values, defaultProperties, target) {
-    // Do the values manipulation here to control the visibility of properties in Studio and Studio Pro conditionally.
-    /* Example
-    if (values.myProperty === "custom") {
-        delete defaultProperties.properties.myOtherProperty;
-    }
-    */
-    return defaultProperties;
+    return get_properties(values, defaultProperties, target);
 }
 
-// /**
-//  * @param {Object} values 
-//  * @returns {Problem[]} returns a list of problems.
-//  */
-// export function check(values) {
-//    /** @type {Problem[]} */
-//    const errors = [];
-//    // Add errors to the above array to throw errors in Studio and Studio Pro.
-//    /* Example
-//    if (values.myProperty !== "custom") {
-//        errors.push({
-//            property: `myProperty`,
-//            message: `The value of 'myProperty' is different of 'custom'.`,
-//            url: "https://github.com/myrepo/mywidget"
-//        });
-//    }
-//    */
-//    return errors;
-// }
+/**
+ * @param {object} values
+ * @param {boolean} isDarkMode
+ * @param {number[]} version
+ * @returns {object}
+ */
+export function getPreview(values, isDarkMode, version) {
+    return get_preview(values, isDarkMode, version);
+}
 
-// /**
-//  * @param {object} values 
-//  * @param {boolean} isDarkMode 
-//  * @param {number[]} version
-//  * @returns {object}
-//  */
-// export function getPreview(values, isDarkMode, version) {
-//     // Customize your pluggable widget appearance for Studio Pro.
-//     return {
-//         type: "Container",
-//         children: []
-//     };
-// }
-
-// /**
-//  * @param {Object} values
-//  * @param {("web"|"desktop")} platform
-//  * @returns {string}
-//  */
-// export function getCustomCaption(values, platform) {
-//     return "MendixWidgetGleam";
-// }
+/**
+ * @param {Object} values
+ * @param {("web"|"desktop")} platform
+ * @returns {string}
+ */
+export function getCustomCaption(values, platform) {
+    return get_custom_caption(values, platform);
+}

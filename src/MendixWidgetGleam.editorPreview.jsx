@@ -1,8 +1,8 @@
 import { createElement } from "react";
-import { hello_world } from "./gleam/hello_world.mjs";
+import { editor_preview, get_preview_css } from "./gleam/widget.mjs";
 
-export function preview({ sampleText }) {
-    return hello_world(sampleText);
+export function preview(props) {
+    return editor_preview(props);
 }
 
 export function getPreviewCss() {
