@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "description": "My widget description",
   "copyright": "ggobp",
-  "author": "Dohyeon Kim",
+  "author": "ggobp",
   "engines": {
     "node": ">=16"
   },
-  "license": "ggobp",
+  "license": "MPL2.0",
   "config": {
     "projectPath": "./tests/testProject",
     "mendixHost": "http://localhost:8080",

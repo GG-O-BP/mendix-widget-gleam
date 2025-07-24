@@ -3,7 +3,7 @@ import {
     check,
     get_preview,
     get_custom_caption
-} from "./gleam/mendix/editor_config.mjs";
+} from "./build/dev/javascript/components/mendix/editor_config.mjs";
 
 export function getProperties(values, defaultProperties, target) {
     return get_properties(values, defaultProperties, target);

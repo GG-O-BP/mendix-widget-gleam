@@ -131,7 +131,7 @@ pub fn create_button(
 
 // FFI functions for low-level JavaScript operations
 @external(javascript, "./react_helpers_ffi.js", "createPropsObject")
-fn create_props_object(pairs: List(#(String, Dynamic))) -> Dynamic
+pub fn create_props_object(pairs: List(#(String, Dynamic))) -> Dynamic
 
 @external(javascript, "./react_helpers_ffi.js", "createPropsObjectFromPairs")
 fn create_props_object_from_pairs(pairs: List(#(String, Dynamic))) -> Dynamic
@@ -144,7 +144,7 @@ fn is_undefined(value: Dynamic) -> Bool
 
 // FFI function to convert any value to Dynamic
 @external(javascript, "./react_helpers_ffi.js", "toDynamic")
-fn to_dynamic(value: a) -> Dynamic
+pub fn to_dynamic(value: a) -> Dynamic
 
 // FFI functions for property extraction
 @external(javascript, "./react_helpers_ffi.js", "extractStringProp")

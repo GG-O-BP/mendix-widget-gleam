@@ -76,21 +76,10 @@ function processTemplate(templatePath, destPath, replacements) {
   console.log(`Generated: ${destPath}`);
 }
 
-// Fix import paths in JavaScript files
-function fixImportPaths(filePath, replacements) {
-  let content = fs.readFileSync(filePath, "utf8");
-
-  replacements.forEach(([from, to]) => {
-    content = content.replace(new RegExp(from, "g"), to);
-  });
-
-  fs.writeFileSync(filePath, content, "utf8");
-}
-
 // Generate main widget JSX file
 function generateWidgetJSX(widgetConfig) {
   const content = `import { createElement } from "react";
-import { mendix_widget_gleam } from "./gleam/mendix/widget.mjs";
+import { mendix_widget_gleam } from "./build/dev/javascript/components/mendix/widget.mjs";
 import "./ui/${widgetConfig.widgetName}.css";
 
 export function ${widgetConfig.widgetName}(props) {
@@ -107,7 +96,7 @@ export function ${widgetConfig.widgetName}(props) {
 // Generate editor preview JSX file
 function generateEditorPreviewJSX(widgetConfig) {
   const content = `import { createElement } from "react";
-import { editor_preview } from "./gleam/mendix/widget.mjs";
+import { editor_preview } from "./build/dev/javascript/components/mendix/widget.mjs";
 
 export function preview(props) {
     return editor_preview(props);
@@ -134,7 +123,7 @@ function generateEditorConfigJS(widgetConfig) {
     check,
     get_preview,
     get_custom_caption
-} from "./gleam/mendix/editor_config.mjs";
+} from "./build/dev/javascript/components/mendix/editor_config.mjs";
 
 export function getProperties(values, defaultProperties, target) {
     return get_properties(values, defaultProperties, target);
@@ -158,117 +147,58 @@ export function getCustomCaption(values, platform) {
   console.log(`Generated: ${destPath}`);
 }
 
-// Clean and recreate gleam destination directory
-function cleanGleamDest() {
-  const gleamDestDir = path.join(config.srcDir, "gleam");
+// Clean and setup destination directories
+function cleanDestination() {
+  const buildDestDir = path.join(config.srcDir, "build");
 
-  if (fs.existsSync(gleamDestDir)) {
-    fs.rmSync(gleamDestDir, { recursive: true, force: true });
+  if (fs.existsSync(buildDestDir)) {
+    fs.rmSync(buildDestDir, { recursive: true, force: true });
   }
 
-  ensureDir(gleamDestDir);
+  ensureDir(buildDestDir);
 }
 
-// Copy built Gleam files
-function copyGleamFiles() {
-  const gleamDestDir = path.join(config.srcDir, "gleam");
-  const stdlibDir = path.join(config.buildDir, "gleam_stdlib");
-  const preludePath = path.join(config.buildDir, "prelude.mjs");
+// Copy entire Gleam build output with original structure
+function copyGleamBuildOutput() {
+  const buildDestDir = path.join(config.srcDir, "build", "dev", "javascript");
 
-  // Copy contents of components directory directly to gleam directory
-  const componentsDir = path.join(config.buildDir, "components");
-  if (fs.existsSync(componentsDir)) {
-    const componentContents = fs.readdirSync(componentsDir);
-    componentContents.forEach((item) => {
-      const srcPath = path.join(componentsDir, item);
-      const destPath = path.join(gleamDestDir, item);
-      if (fs.statSync(srcPath).isDirectory()) {
-        copyDir(srcPath, destPath);
-      } else {
-        copyFile(srcPath, destPath);
-      }
-    });
-  }
-
-  // Also copy any standalone .mjs files in the build root
   if (fs.existsSync(config.buildDir)) {
-    const files = fs.readdirSync(config.buildDir);
-    const mjsFiles = files.filter(
-      (file) => file.endsWith(".mjs") && file !== "prelude.mjs"
-    );
-
-    mjsFiles.forEach((file) => {
-      copyFile(path.join(config.buildDir, file), path.join(gleamDestDir, file));
-    });
+    copyDir(config.buildDir, buildDestDir);
+    console.log(`Copied Gleam build output to: ${buildDestDir}`);
   }
 
-  // Copy stdlib
-  if (fs.existsSync(stdlibDir)) {
-    copyDir(stdlibDir, path.join(gleamDestDir, "gleam_stdlib"));
-  }
-
-  // Copy prelude
-  if (fs.existsSync(preludePath)) {
-    copyFile(preludePath, path.join(gleamDestDir, "prelude.mjs"));
-  }
-
-  // Copy FFI helpers to their respective module directories
+  // Copy FFI files to their respective locations within the build structure
   if (fs.existsSync(config.jsFFIDir)) {
-    // Copy react_helpers_ffi.js to utils directory (matches utils/react_helpers.gleam)
-    const reactHelpersFfi = path.join(config.jsFFIDir, "react_helpers_ffi.js");
-    if (fs.existsSync(reactHelpersFfi)) {
-      const utilsDir = path.join(gleamDestDir, "utils");
+    // Copy react_helpers_ffi.js to utils directory
+    const reactHelpersFfiSrc = path.join(
+      config.jsFFIDir,
+      "react_helpers_ffi.js"
+    );
+    if (fs.existsSync(reactHelpersFfiSrc)) {
+      const utilsDir = path.join(buildDestDir, "components", "utils");
       if (fs.existsSync(utilsDir)) {
-        copyFile(reactHelpersFfi, path.join(utilsDir, "react_helpers_ffi.js"));
+        copyFile(
+          reactHelpersFfiSrc,
+          path.join(utilsDir, "react_helpers_ffi.js")
+        );
       }
     }
 
-    // Copy build_helpers_ffi.js to build directory (matches build/build_widget.gleam)
-    const buildHelpersFfi = path.join(config.jsFFIDir, "build_helpers_ffi.js");
-    if (fs.existsSync(buildHelpersFfi)) {
-      const buildDir = path.join(gleamDestDir, "build");
+    // Copy build_helpers_ffi.js to build directory
+    const buildHelpersFfiSrc = path.join(
+      config.jsFFIDir,
+      "build_helpers_ffi.js"
+    );
+    if (fs.existsSync(buildHelpersFfiSrc)) {
+      const buildDir = path.join(buildDestDir, "components", "build");
       if (fs.existsSync(buildDir)) {
-        copyFile(buildHelpersFfi, path.join(buildDir, "build_helpers_ffi.js"));
+        copyFile(
+          buildHelpersFfiSrc,
+          path.join(buildDir, "build_helpers_ffi.js")
+        );
       }
     }
   }
-}
-
-// Fix import paths in copied files
-function fixGleamImports() {
-  const gleamDestDir = path.join(config.srcDir, "gleam");
-
-  // Consistent import replacements for all files
-  const importReplacements = [
-    ["../js_ffi/", "./"],
-    ["../../gleam_stdlib/", "../gleam_stdlib/"],
-    ["../prelude.mjs", "./prelude.mjs"],
-  ];
-  const importReplacementsStdlib = [["../prelude.mjs", "../prelude.mjs"]];
-
-  // Recursively process all .mjs files in the gleam directory
-  function processDirectory(dirPath) {
-    const items = fs.readdirSync(dirPath);
-
-    items.forEach((item) => {
-      const itemPath = path.join(dirPath, item);
-      const stat = fs.statSync(itemPath);
-
-      if (stat.isDirectory()) {
-        // Recursively process subdirectories
-        processDirectory(itemPath);
-      } else if (item.endsWith(".mjs")) {
-        // Process .mjs files with consistent replacements
-        if (itemPath.includes("gleam_stdlib")) {
-          fixImportPaths(itemPath, importReplacementsStdlib);
-        } else {
-          fixImportPaths(itemPath, importReplacements);
-        }
-      }
-    });
-  }
-
-  processDirectory(gleamDestDir);
 }
 
 // Process templates
@@ -324,11 +254,12 @@ function build() {
     });
 
     // Clean and setup
-    cleanGleamDest();
-    copyGleamFiles();
-    fixGleamImports();
+    cleanDestination();
 
-    // Generate JavaScript/JSX files
+    // Copy entire build output maintaining original structure
+    copyGleamBuildOutput();
+
+    // Generate JavaScript/JSX files with correct import paths
     generateWidgetJSX(widgetConfig);
     generateEditorPreviewJSX(widgetConfig);
     generateEditorConfigJS(widgetConfig);
@@ -338,6 +269,7 @@ function build() {
 
     console.log("Build completed successfully!");
     console.log(`Generated files for widget: ${widgetConfig.widgetName}`);
+    console.log("Build structure maintains Gleam's native import paths.");
   } catch (error) {
     console.error("Build failed:", error.message);
     process.exit(1);
