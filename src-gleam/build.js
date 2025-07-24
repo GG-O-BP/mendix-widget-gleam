@@ -23,7 +23,7 @@ function getWidgetConfig() {
     return {
       widgetName: packageJson.widgetName,
       widgetNameLower: packageJson.widgetName.toLowerCase(),
-      packagePath: packageJson.packagePath || "sbtglobal",
+      packagePath: packageJson.packagePath || "empty",
       version: packageJson.version || "1.0.0",
     };
   } catch (error) {

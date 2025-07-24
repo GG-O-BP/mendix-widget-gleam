@@ -58,7 +58,7 @@ pub fn get_widget_config(config: BuildConfig) -> Result(WidgetConfig, String) {
   use widget_name <- result.try(extract_string_field(json_value, "widgetName"))
   use package_path <- result.try(
     extract_string_field(json_value, "packagePath")
-    |> result.or(Ok("sbtglobal")),
+    |> result.or(Ok("empty")),
   )
   use version <- result.try(
     extract_string_field(json_value, "version")
